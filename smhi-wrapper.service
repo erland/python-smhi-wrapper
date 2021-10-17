@@ -1,0 +1,16 @@
+[Unit]
+Description=Gunicorn instance to serve the smhi-wrapper application
+After=network.target
+
+[Service]
+User=erland
+Group=erland
+PIDFile=/tmp/smhi-wrapper-gunicorn.pid
+Environment="PATH=/opt/smhi-wrapper/venv/bin"
+WorkingDirectory=/opt/smhi-wrapper
+ExecStart=/opt/smhi-wrapper/venv/bin/gunicorn --workers 3 -b 0.0.0.0:5000 smhi-wrapper:app
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
